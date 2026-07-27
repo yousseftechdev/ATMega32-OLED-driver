@@ -19,6 +19,7 @@ Recently, I challenged myself to build a [TWI/I<sup>2</sup>C driver for the ATMe
 Building further on that, I created this OLED driver as the next layer. While the TWI driver handles the communication, this driver manages display initialization, rendering logic, and graphics operations. To keep the challenge going, I developed this module by relying exclusively on the [SSD1306 OLED display datasheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf).
 
 ## Features
+- Under construction
 
 ## Requirements
 
@@ -37,8 +38,6 @@ You will need a standard AVR development environment to compile and flash the co
 * **Flashing Utility:** `avrdude` (to upload the compiled `.hex` file to the microcontroller).
 * **Dependencies:** This library relies on my custom [ATMega32 TWI/I<sup>2</sup>C driver](https://github.com/yousseftechdev/ATMega32-TWI-driver). Ensure its source files are included and properly linked in your build environment.
 
----
-
 ## Wiring / Pinout
 The ATMega32 uses its hardware TWI (Two-Wire Interface) pins for I<sup>2</sup>C communication. Connect your OLED display as follows:
 
@@ -48,3 +47,6 @@ The ATMega32 uses its hardware TWI (Two-Wire Interface) pins for I<sup>2</sup>C 
 | **VCC** | 5V or 3.3V | Power Supply (Check your OLED's voltage rating!) |
 | **SCL** | **PC0** (Pin 22) | I<sup>2</sup>C Clock |
 | **SDA** | **PC1** (Pin 23) | I<sup>2</sup>C Data |
+
+## AI Usage Declaration
+Gemini AI was used for debugging purposes, usage can be verified in Lapse (https://lapse.hackclub.com/timelapse/n_QSRWfL-Uo1)
