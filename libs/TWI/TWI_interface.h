@@ -29,6 +29,10 @@ typedef unsigned long int u32;
 #define TWI_READ true
 #define TWI_WRITE false
 
+/* Auto stop */
+#define TWI_AUTO_STOP true
+#define TWI_MANUAL_STOP false
+
 /* Acknowledge enable bit */
 #define TWI_ACKNOWLEDGE_ENABLE 1
 #define TWI_ACKNOWLEDGE_DISABLE 0
@@ -63,6 +67,13 @@ void TWI_vSetFrequency(u32 u32Freq);
 void TWI_vEnableInterrupt();
 
 /**
+* @brief                Enables/disables auto-stop feature.
+* @param bAutoStopState Input TWI_AUTO_STOP to enable, TWI_MANUAL_STOP to disable
+* @note                 If auto-stop disabled the developer has to call EndTransmission() manually
+*/
+void TWI_vSetAutoStop(bool bAutoStopState);
+
+/**
  * @brief               Sets the bit rate generator bits in TWBR.
  * @param u8BitRateByte The 8 bits to be written to the TWBR register
  */
@@ -82,7 +93,7 @@ void TWI_vWritePrescaler(u8 u8Prescaler);
 void TWI_vSetOwnSlaveAddress(u8 u8Address, bool boolGeneralCall);
 
 /**
- * @brief                       Allows the ATMega to to toggle whether to 
+ * @brief                       Allows the ATMega to to toggle whether to
  *                              send acknowledge bit when own address is called.
  * @param boolAcknowledgeEnable Decide whether to send acknowledge pulses when address is detected
  */
@@ -127,13 +138,21 @@ u8 TWI_u8ReadDataByte(void);
 bool TWI_bSendData(u8 u8Address, u8 *pData, u8 u8Size);
 
 /**
+ * @brief           Wrapper for TWI_bSendData, is able to send one byte without the need to pass it as an array or define the size.
+ * @param u8Address Target slave address
+ * @param u8Data    Byte to be sent
+ * @return true if busy, false if idle
+ */
+bool TWI_bSendDataShot(u8 u8Address, u8 u8Data);
+
+/**
  * @brief           Actually kicks off the transmission and sets all the necessary flags at the beginning and puts the slave in read mode.
  * @param u8Address Target slave address
  * @param pData     Array pointer for the bytes to be transmitted
  * @param u8Size    Number of bytes to send
  * @return true if busy, false if idle
  */
- bool TWI_bReadData(u8 u8Address, u8 *pData, u8 u8Size);
+bool TWI_bReadData(u8 u8Address, u8 *pData, u8 u8Size);
 
 /**
  * @brief Checks if the I2C bus is currently processing a transaction.
