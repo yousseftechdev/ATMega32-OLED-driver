@@ -55,3 +55,15 @@ void OLED_vStreamData(u8 *pData, u8 u8Size);
  * @param u8Byte Byte to be written for every pixel
  */
 void OLED_vFill(u8 u8Byte);
+
+/**
+ * @brief Clears screen (Clears entire GDDRAM)
+ */
+void OLED_vClear(void);
+
+/**
+ * @brief Draws a square with the current cursor position being the top right corner of the square
+ * @param u8Width  Number of pixels on the X axis
+ * @param u8Length Number of pixels on the Y axis
+ */
+void OLED_vSquare(u8 u8Width, u8 u8Length);
