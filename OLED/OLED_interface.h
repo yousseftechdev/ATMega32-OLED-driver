@@ -21,6 +21,11 @@ typedef unsigned long int u32;
 #define OLED_CTL_CMD_STREAM 0x00  /* Stream Commands */
 #define OLED_CTL_DATA_STREAM 0x40 /* Stream Data    */
 
+/* Addressing modes */
+#define OLED_HORIZONTAL_ADDRESSING 0x00
+#define OLED_VERTICAL_ADDRESSING 0x01
+#define OLED_PAGE_ADDRESSING 0x02
+
 /**
  * @brief Initialize I2C communication with the OLED and set up the internal configuration.
  */
@@ -60,6 +65,15 @@ void OLED_vFill(u8 u8Byte);
  * @brief Clears screen (Clears entire GDDRAM)
  */
 void OLED_vClear(void);
+
+/**
+ * @brief Resets OLED memory window.
+ * @param u8StartCol Index of start Colum (0 - 127)
+ * @param u8EndCol Index of end Colum (0 - 127)
+ * @param u8StartPage Index of start Page (0 - 7)
+ * @param u8EndPage Index of end Page (0 - 7)
+ */
+void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage);
 
 /**
  * @brief Draws a square with the current cursor position being the top right corner of the square
