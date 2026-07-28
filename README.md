@@ -50,3 +50,4 @@ The ATMega32 uses its hardware TWI (Two-Wire Interface) pins for I<sup>2</sup>C 
 
 ## AI Usage Declaration
 Gemini AI was used for debugging purposes, usage can be verified in Lapse (https://lapse.hackclub.com/timelapse/n_QSRWfL-Uo1)
+Github Copilot was used to help write working example code for showcasing
