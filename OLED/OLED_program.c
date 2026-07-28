@@ -245,8 +245,8 @@ void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
     }
 }
 
-void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
+void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 {
     OLED_vSquare(u8x, u8y, u8Width, u8Height);
-    OLED_vSquareInverted(u8x, u8y, u8Width, u8Height);
+    OLED_vSquareInverted(u8x - u8OutlineWidth, u8y - u8OutlineWidth, u8Width - (u8OutlineWidth*2), u8Height - (u8OutlineWidth*2));
 }
