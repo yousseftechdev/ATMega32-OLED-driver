@@ -145,6 +145,20 @@ void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage)
     OLED_vStreamCmds(cmd, 7);
 }
 
+void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage)
+{
+    u8 cmd[7] = {
+        OLED_CTL_CMD_STREAM,
+        0x21,
+        u8StartCol & 0x7F,
+        u8EndCol & 0x7F,
+        0x22,
+        u8StartPage & 0x07,
+        u8EndPage & 0x07};
+
+    OLED_vStreamCmds(cmd, 7);
+}
+
 void OLED_vSquare(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
 {
     u8 buffer[129];
