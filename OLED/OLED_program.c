@@ -145,20 +145,6 @@ void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage)
     OLED_vStreamCmds(cmd, 7);
 }
 
-void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage)
-{
-    u8 cmd[7] = {
-        OLED_CTL_CMD_STREAM,
-        0x21,
-        u8StartCol & 0x7F,
-        u8EndCol & 0x7F,
-        0x22,
-        u8StartPage & 0x07,
-        u8EndPage & 0x07};
-
-    OLED_vStreamCmds(cmd, 7);
-}
-
 void OLED_vSquare(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
 {
     u8 buffer[129];
@@ -221,7 +207,7 @@ void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
     if (u8x + u8Width > 128)
         u8Width = 128 - u8x;
     if (u8y + u8Height > 64)
-        u8Height = 64 - u8y; // FIXED
+        u8Height = 64 - u8y;
 
     u8 u8StartPage = u8y / 8;
     u8 u8StartBit = u8y % 8;
@@ -261,6 +247,21 @@ void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
 
 void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 {
+    /* 
+       SAFETY CHECK: Prevent unsigned integer underflow!
+       If the outline is thicker than half the square, the inner math will wrap around
+       to a massive number (e.g., 255) and draw a giant rectangle across the screen.
+    */
+    if (u8Width <= (u8OutlineWidth * 2) || u8Height <= (u8OutlineWidth * 2))
+    {
+        return;
+    }
+
     OLED_vSquare(u8x, u8y, u8Width, u8Height);
-    OLED_vSquareInverted(u8x - u8OutlineWidth, u8y - u8OutlineWidth, u8Width - (u8OutlineWidth*2), u8Height - (u8OutlineWidth*2));
+
+    OLED_vSquareInverted(
+        u8x + u8OutlineWidth,
+        u8y + u8OutlineWidth,
+        u8Width - (u8OutlineWidth * 2),
+        u8Height - (u8OutlineWidth * 2));
 }

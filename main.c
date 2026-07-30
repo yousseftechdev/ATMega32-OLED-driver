@@ -7,19 +7,17 @@ int main()
     sei();
     OLED_vInit();
     OLED_vClear();
-    OLED_vSquare(128 / 4, 64 / 4, 64, 64 / 2);
-    OLED_vSquareInverted((128 / 4) + 2, (64 / 4) + 2, 64 - 4, (64 / 2) - 4);
+    OLED_vSquareOutline(2, 2, 10, 10, 1);
     while (1)
     {
-        // OLED_vSquare(0, 0, 64, 32);
-        // _delay_ms(50);
-        // OLED_vSquare(64, 0, 64, 32);
-        // _delay_ms(50);
-        // OLED_vSquare(0, 32, 64, 32);
-        // _delay_ms(50);
-        // OLED_vSquare(64, 32, 64, 32);
-        // _delay_ms(50);
-
+        // for (u8 i = 0; i < 64; i++)
+        // {
+        //     OLED_vSquareOutline(0, 0, i*2, i, 1);
+        //     OLED_vSquare(0, 0, i*2, i);
+        //     _delay_ms(100);
+        //     OLED_vClear();
+        // }
         // OLED_vClear();
+        // _delay_ms(100);
     }
 }
