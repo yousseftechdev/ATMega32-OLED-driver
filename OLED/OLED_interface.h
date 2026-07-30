@@ -108,6 +108,20 @@ void OLED_vSquare(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height);
 void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height);
 
 /**
+ * @brief Turns on a single pixel
+ * @param u8x X coordinate of pixel
+ * @param u8y Y coordinate of pixel
+ */
+void OLED_vDrawPixel(u8 u8x, u8 u8y);
+
+/**
+ * @brief Turns off a single pixel
+ * @param u8x X coordinate of pixel
+ * @param u8y Y coordinate of pixel
+ */
+void OLED_vClearPixel(u8 u8x, u8 u8y);
+
+/**
  * @brief Draws a hollow square
  * @param u8x1 X coordinate of upper left corner
  * @param u8y1 Y coordinate of upper left corner

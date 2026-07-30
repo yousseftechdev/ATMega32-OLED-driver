@@ -245,18 +245,46 @@ void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
     }
 }
 
+void OLED_vDrawPixel(u8 u8x, u8 u8y)
+{
+    if (u8x >= 128 || u8y >= 64)
+        return;
+
+    u8 page = u8y / 8;
+    u8 bit = u8y % 8;
+    u8 pattern = (1U << bit);
+
+    OLED_vSetWindow(u8x, u8x, page, page);
+    OLED_vSendData(~pattern);
+}
+
+void OLED_vClearPixel(u8 u8x, u8 u8y)
+{
+    if (u8x >= 128 || u8y >= 64)
+        return;
+
+    u8 page = u8y / 8;
+    u8 bit = u8y % 8;
+    u8 pattern = (1U << bit);
+
+    OLED_vSetWindow(u8x, u8x, page, page);
+    OLED_vSendData(pattern);
+}
+
 void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 {
+    // Safety check
     if (u8Width <= (u8OutlineWidth * 2) || u8Height <= (u8OutlineWidth * 2))
     {
-        return; 
+        return;
     }
 
-    OLED_vSquare(u8x, u8y, u8Width, u8OutlineWidth);
-    
-    OLED_vSquare(u8x, u8y + u8Height - u8OutlineWidth, u8Width, u8OutlineWidth);
-    
-    OLED_vSquare(u8x, u8y + u8OutlineWidth, u8OutlineWidth, u8Height - (u8OutlineWidth * 2));
-    
-    OLED_vSquare(u8x + u8Width - u8OutlineWidth, u8y + u8OutlineWidth, u8OutlineWidth, u8Height - (u8OutlineWidth * 2));
+    OLED_vSquare(u8x, u8y, u8OutlineWidth, u8Height);
+
+    OLED_vSquare(u8x + u8Width - u8OutlineWidth, u8y, u8OutlineWidth, u8Height);
+
+    OLED_vSquare(u8x + u8OutlineWidth, u8y, u8Width - (u8OutlineWidth * 2), u8OutlineWidth);
+
+    OLED_vSquare(u8x + u8OutlineWidth, u8y + u8Height - u8OutlineWidth,
+                 u8Width - (u8OutlineWidth * 2), u8OutlineWidth);
 }
