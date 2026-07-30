@@ -247,21 +247,16 @@ void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
 
 void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 {
-    /* 
-       SAFETY CHECK: Prevent unsigned integer underflow!
-       If the outline is thicker than half the square, the inner math will wrap around
-       to a massive number (e.g., 255) and draw a giant rectangle across the screen.
-    */
     if (u8Width <= (u8OutlineWidth * 2) || u8Height <= (u8OutlineWidth * 2))
     {
-        return;
+        return; 
     }
 
-    OLED_vSquare(u8x, u8y, u8Width, u8Height);
-
-    OLED_vSquareInverted(
-        u8x + u8OutlineWidth,
-        u8y + u8OutlineWidth,
-        u8Width - (u8OutlineWidth * 2),
-        u8Height - (u8OutlineWidth * 2));
+    OLED_vSquare(u8x, u8y, u8Width, u8OutlineWidth);
+    
+    OLED_vSquare(u8x, u8y + u8Height - u8OutlineWidth, u8Width, u8OutlineWidth);
+    
+    OLED_vSquare(u8x, u8y + u8OutlineWidth, u8OutlineWidth, u8Height - (u8OutlineWidth * 2));
+    
+    OLED_vSquare(u8x + u8Width - u8OutlineWidth, u8y + u8OutlineWidth, u8OutlineWidth, u8Height - (u8OutlineWidth * 2));
 }

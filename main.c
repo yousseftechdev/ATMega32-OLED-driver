@@ -7,7 +7,7 @@ int main()
     sei();
     OLED_vInit();
     OLED_vClear();
-    OLED_vSquareOutline(2, 2, 10, 10, 1);
+    OLED_vSquareOutline(32, 16, 64, 32, 5);
     while (1)
     {
         // for (u8 i = 0; i < 64; i++)
