@@ -51,12 +51,14 @@ void OLED_vSendData(u8 u8Data);
 /**
  * @brief Stream command bytes
  * @param pCmd  Array pointer for command bytes to be sent
+ * @note The first item in the input array WILL BE REPLACED with the appropriate command byte, please make sure the data at index 0 of your array is empty or not important
  */
 void OLED_vStreamCmds(u8 *pCmd, u8 u8Size);
 
 /**
  * @brief Stream data bytes
  * @param pData  Array pointer for data bytes to be sent
+ * @note The first item in the input array WILL BE REPLACED with the appropriate command byte, please make sure the data at index 0 of your array is empty or not important
  */
 void OLED_vStreamData(u8 *pData, u8 u8Size);
 
@@ -90,43 +92,43 @@ void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage);
 void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage);
 
 /**
+ * @brief Draws a horizontal line
+ * @param u8x X coordinate of left terminal of line
+ * @param u8y Y coordinate of left terminal of line
+ * @param u8Length Number of pixels the line will be in length
+ */
+void OLED_vLineH(u8 u8x, u8 u8y, u8 u8Length);
+
+/**
+ * @brief Draws a vertical line
+ * @param u8x X coordinate of upper left corner
+ * @param u8y Y coordinate of upper left corner
+ * @param u8Length Number of pixels the line will be in length
+ */
+void OLED_vLineV(u8 u8x, u8 u8y, u8 u8Length);
+
+/**
  * @brief Draws a square
- * @param u8x1 X coordinate of upper left corner
- * @param u8y1 Y coordinate of upper left corner
+ * @param u8x X coordinate of upper left corner
+ * @param u8y Y coordinate of upper left corner
  * @param u8Width  Number of pixels on the X axis
- * @param u8Length Number of pixels on the Y axis
+ * @param u8Height Number of pixels on the Y axis
  */
-void OLED_vSquare(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height);
-
-/**
- * @brief Turns off a square of pixels
- * @param u8x1 X coordinate of upper left corner
- * @param u8y1 Y coordinate of upper left corner
- * @param u8Width  Number of pixels on the X axis
- * @param u8Length Number of pixels on the Y axis
- */
-void OLED_vSquareInverted(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height);
-
-/**
- * @brief Turns on a single pixel
- * @param u8x X coordinate of pixel
- * @param u8y Y coordinate of pixel
- */
-void OLED_vDrawPixel(u8 u8x, u8 u8y);
-
-/**
- * @brief Turns off a single pixel
- * @param u8x X coordinate of pixel
- * @param u8y Y coordinate of pixel
- */
-void OLED_vClearPixel(u8 u8x, u8 u8y);
+void OLED_vFillRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height);
 
 /**
  * @brief Draws a hollow square
- * @param u8x1 X coordinate of upper left corner
- * @param u8y1 Y coordinate of upper left corner
+ * @param u8x X coordinate of upper left corner
+ * @param u8y Y coordinate of upper left corner
  * @param u8Width  Number of pixels on the X axis
  * @param u8Length Number of pixels on the Y axis
  * @param u8OutlineWidth Width of the outline
  */
-void OLED_vSquareOutline(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth);
+void OLED_vRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth);
+
+/**
+ * @brief Draws a single pixel
+ * @param u8x X coordinate of pixel
+ * @param u8y Y coordinate of pixel
+ */
+void OLED_vPixel(u8 u8x, u8 u8y);

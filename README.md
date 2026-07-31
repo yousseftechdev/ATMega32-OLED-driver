@@ -1,6 +1,10 @@
 # ATMega32 OLED Driver
 This is a custom OLED driver written in C for the ATMega32 AVR microcontroller from Atmel/Microchip. It requires my custom I<sup>2</sup>C driver as a base dependency.
 
+<img src="PrototypePicture.webp" alt="Prototype" width=300 height=400>
+
+I swear to god this image is not AI generated, my phone's camera just does that in low lighting 🥲.
+
 ## Content
 - [What is this?](#what-is-this)
 - [The Challenge](#the-challenge)
