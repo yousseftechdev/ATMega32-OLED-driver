@@ -281,14 +281,14 @@ void OLED_vRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
         return;
     }
 
-    OLED_vFillRectangle(u8x, u8y, u8OutlineWidth, u8Height);
+    OLED_vFillRectangle(u8x, u8y, u8OutlineWidth, u8Height); /* Left side */
 
-    OLED_vFillRectangle(u8x + u8Width - u8OutlineWidth, u8y, u8OutlineWidth, u8Height);
+    OLED_vFillRectangle(u8x + u8Width - u8OutlineWidth, u8y, u8OutlineWidth, u8Height); /* Right side */
 
-    OLED_vFillRectangle(u8x + u8OutlineWidth, u8y, u8Width - (u8OutlineWidth * 2), u8OutlineWidth);
+    OLED_vFillRectangle(u8x + u8OutlineWidth, u8y, u8Width - (u8OutlineWidth * 2), u8OutlineWidth); /* Top */
 
     OLED_vFillRectangle(u8x + u8OutlineWidth, u8y + u8Height - u8OutlineWidth,
-                        u8Width - (u8OutlineWidth * 2), u8OutlineWidth);
+                        u8Width - (u8OutlineWidth * 2), u8OutlineWidth); /* Bottom side*/
 }
 
 void OLED_vPixel(u8 u8x, u8 u8y)
@@ -296,5 +296,58 @@ void OLED_vPixel(u8 u8x, u8 u8y)
     if (u8x >= 0 && u8x < 128 && u8y >= 0 && u8y < 64)
     {
         OLED_vFillRectangle(u8x, u8y, 1, 1);
+    }
+}
+
+void OLED_vChar(u8 u8x, u8 u8y, char u8c)
+{
+    if (u8x >= 128 || u8y >= 64)
+        return;
+
+    u8 buffer[6];
+    bool bHasData;
+
+    u8 u8FontIdx = (u8c < ' ' || u8c > 'Z' ? 0 : (u8c - ' '));
+
+    u8 u8StartPage = u8y / 8;
+    u8 u8BitOffeset = u8y % 8;
+    u8 u8CurrentPage = 0;
+    u8 u8CharCol;
+    u8 u8ByteToDraw;
+
+    u8 u8PagesToDraw = (u8BitOffeset == 0) ? 1 : 2;
+
+    for (u8 page = 0; page < u8PagesToDraw; page++)
+    {
+        u8CurrentPage = u8StartPage + page;
+        if (u8CurrentPage > 7)
+            break;
+
+        buffer[0] = OLED_CTL_DATA_STREAM;
+        bHasData = false;
+
+        for (u8 col = 0; col < 5; col++)
+        {
+            u8CharCol = pgm_read_byte(&(Font5x7[u8FontIdx][col]));
+            u8ByteToDraw = 0;
+
+            if (page == 0)
+            {
+                u8ByteToDraw = u8CharCol << u8BitOffeset;
+            }
+            else
+            {
+                u8ByteToDraw = u8CharCol >> (8 - u8BitOffeset);
+            }
+
+            if (u8ByteToDraw != 0) bHasData = true;
+            buffer[col + 1] = u8ByteToDraw;
+        }
+
+        if (bHasData || page == 0)
+        {
+            OLED_vSetWindow(u8x, u8x + 4, u8CurrentPage, u8CurrentPage);
+            OLED_vStreamData(buffer, 6);
+        }
     }
 }

@@ -1,5 +1,5 @@
 # ATMega32 OLED Driver
-This is a custom OLED driver written in C for the ATMega32 AVR microcontroller from Atmel/Microchip. It requires my custom I<sup>2</sup>C driver as a base dependency.
+This is a custom OLED driver written in C for the ATMega32 AVR microcontroller from Atmel/Microchip, designed to be ultra RAM saving, as it doesn't use a frame buffer, stores the font in flash instead of in RAM, and stores temporary buffers in BSS memory during operation only, leaving room for the rest of the code running on the ATMega from the main application. It requires my custom I<sup>2</sup>C driver as a base dependency.
 
 <img src="PrototypePicture.webp" alt="Prototype" width=300 height=400>
 
@@ -9,6 +9,7 @@ I swear to god this image is not AI generated, my phone's camera just does that 
 - [What is this?](#what-is-this)
 - [The Challenge](#the-challenge)
 - [Features](#features)
+    - [Planned features](#planned-features)
 - [Requirements](#requirements)
     - [Hardware](#hardware)
     - [Software](#software)
@@ -23,7 +24,14 @@ Recently, I challenged myself to build a [TWI/I<sup>2</sup>C driver for the ATMe
 Building further on that, I created this OLED driver as the next layer. While the TWI driver handles the communication, this driver manages display initialization, rendering logic, and graphics operations. To keep the challenge going, I developed this module by relying exclusively on the [SSD1306 OLED display datasheet](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf).
 
 ## Features
-- Under construction
+- Fast
+- Low RAM usage
+- Shapes + Text
+- Low-level helper functions to send data and command bytes yourself
+
+### Planned Features
+- 128x32 mode
+- Functions to help read the buffer without using up half the RAM
 
 ## Requirements
 

@@ -21,6 +21,7 @@ static volatile u8 TWI_u8DataCounter;                              /* Current by
 static volatile u8 TWI_u8SlaveAddress;                             /* Target slave address */
 static volatile bool TWI_boolDirection;                            /* true = Read, false = Write */
 static volatile bool TWI_boolIsBusy;                               /* Flag to prevent overlapping transactions */
+// volatile u32 TWI_u32Frequency;
 
 /* Set interrupt handler */
 ISR(TWI_vect)
@@ -84,12 +85,18 @@ void TWI_vSetFrequency(u32 u32Freq)
 
                 /* If exact match stop looking */
                 if (u32Error == 0)
+                {
+                    // TWI_u32Frequency = u32CalculatedFrequency;
                     break;
+                }
             }
         }
 
         if (u32BestError == 0)
+        {
+            // TWI_u32Frequency = u32CalculatedFrequency;
             break;
+        }
     }
 
     TWI_vWriteBitRateRegister(u8BestBr);
@@ -156,7 +163,8 @@ bool TWI_bSendData(u8 u8Address, u8 *pData, u8 u8Size)
     return true;
 }
 
-bool TWI_bSendDataShot(u8 u8Address, u8 u8Data) {
+bool TWI_bSendDataShot(u8 u8Address, u8 u8Data)
+{
     return TWI_bSendData(u8Address, (u8[]){u8Data}, 1);
 }
 

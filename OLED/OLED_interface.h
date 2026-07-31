@@ -132,3 +132,11 @@ void OLED_vRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
  * @param u8y Y coordinate of pixel
  */
 void OLED_vPixel(u8 u8x, u8 u8y);
+
+/**
+ * @brief Draws a single character. Handles page-splitting automatically.
+ * @param u8x X coordinate of pixel
+ * @param u8y Y coordinate of pixel
+ * @param u8c The character itself
+ */
+void OLED_vChar(u8 u8x, u8 u8y, char u8c);
