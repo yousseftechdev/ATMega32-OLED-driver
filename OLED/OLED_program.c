@@ -213,34 +213,35 @@ void OLED_vSetWindow(u8 u8StartCol, u8 u8EndCol, u8 u8StartPage, u8 u8EndPage)
     OLED_vStreamCmds(cmd, 7);
 }
 
-void OLED_vLineH(u8 u8x, u8 u8y, u8 u8Length)
+void OLED_vLineH(u8 u8X, u8 u8Y, u8 u8Length)
 {
-    OLED_vFillRectangle(u8x, u8y, u8Length, 1);
+    OLED_vFillRectangle(u8X, u8Y, u8Length, 1);
 }
 
-void OLED_vLineV(u8 u8x, u8 u8y, u8 u8Length)
+void OLED_vLineV(u8 u8X, u8 u8Y, u8 u8Length)
 {
-    OLED_vFillRectangle(u8x, u8y, 1, u8Length);
+    OLED_vFillRectangle(u8X, u8Y, 1, u8Length);
 }
 
-void OLED_vFillRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
+void OLED_vFillRectangle(u8 u8X, u8 u8Y, u8 u8Width, u8 u8Height)
 {
     static u8 buffer[129];
     buffer[0] = OLED_CTL_DATA_STREAM;
     u8 pattern;
 
     /* Bounds */
-    if (u8x >= 128 || u8y >= 64 || u8Width == 0 || u8Height == 0)
+    if (u8X >= 128 || u8Y >= 64 || u8Width == 0 || u8Height == 0)
         return;
-    if (u8x + u8Width > 128)
-        u8Width = 128 - u8x;
-    if (u8y + u8Height > 64)
-        u8Height = 64 - u8y; // FIXED
+    if ((u16)u8X + u8Width > 128)
+        u8Width = 128 - u8X;
 
-    u8 u8StartPage = u8y / 8;
-    u8 u8StartBit = u8y % 8;
-    u8 u8EndPage = (u8y + u8Height - 1) / 8;
-    u8 u8EndBit = (u8y + u8Height - 1) % 8;
+    if ((u16)u8Y + u8Height > 64)
+        u8Height = 64 - u8Y;
+
+    u8 u8StartPage = u8Y / 8;
+    u8 u8StartBit = u8Y % 8;
+    u8 u8EndPage = (u8Y + u8Height - 1) / 8;
+    u8 u8EndBit = (u8Y + u8Height - 1) % 8;
 
     for (u8 page = u8StartPage; page <= u8EndPage; page++)
     {
@@ -268,12 +269,12 @@ void OLED_vFillRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height)
             buffer[byte] = pattern;
         }
 
-        OLED_vSetWindow(u8x, u8x + u8Width - 1, page, page);
+        OLED_vSetWindow(u8X, u8X + u8Width - 1, page, page);
         OLED_vStreamData(buffer, u8Width + 1);
     }
 }
 
-void OLED_vRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
+void OLED_vRectangle(u8 u8X, u8 u8Y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 {
     // Safety check
     if (u8Width <= (u8OutlineWidth * 2) || u8Height <= (u8OutlineWidth * 2))
@@ -281,36 +282,36 @@ void OLED_vRectangle(u8 u8x, u8 u8y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
         return;
     }
 
-    OLED_vFillRectangle(u8x, u8y, u8OutlineWidth, u8Height); /* Left side */
+    OLED_vFillRectangle(u8X, u8Y, u8OutlineWidth, u8Height); /* Left side */
 
-    OLED_vFillRectangle(u8x + u8Width - u8OutlineWidth, u8y, u8OutlineWidth, u8Height); /* Right side */
+    OLED_vFillRectangle(u8X + u8Width - u8OutlineWidth, u8Y, u8OutlineWidth, u8Height); /* Right side */
 
-    OLED_vFillRectangle(u8x + u8OutlineWidth, u8y, u8Width - (u8OutlineWidth * 2), u8OutlineWidth); /* Top */
+    OLED_vFillRectangle(u8X + u8OutlineWidth, u8Y, u8Width - (u8OutlineWidth * 2), u8OutlineWidth); /* Top */
 
-    OLED_vFillRectangle(u8x + u8OutlineWidth, u8y + u8Height - u8OutlineWidth,
+    OLED_vFillRectangle(u8X + u8OutlineWidth, u8Y + u8Height - u8OutlineWidth,
                         u8Width - (u8OutlineWidth * 2), u8OutlineWidth); /* Bottom side*/
 }
 
-void OLED_vPixel(u8 u8x, u8 u8y)
+void OLED_vPixel(u8 u8X, u8 u8Y)
 {
-    if (u8x >= 0 && u8x < 128 && u8y >= 0 && u8y < 64)
+    if (u8X >= 0 && u8X < 128 && u8Y >= 0 && u8Y < 64)
     {
-        OLED_vFillRectangle(u8x, u8y, 1, 1);
+        OLED_vFillRectangle(u8X, u8Y, 1, 1);
     }
 }
 
-void OLED_vChar(u8 u8x, u8 u8y, char u8c)
+void OLED_vChar(u8 u8X, u8 u8Y, s8 s8C)
 {
-    if (u8x >= 128 || u8y >= 64)
+    if (u8X >= 128 || u8Y >= 64)
         return;
 
     u8 buffer[6];
     bool bHasData;
 
-    u8 u8FontIdx = (u8c < ' ' || u8c > 'Z' ? 0 : (u8c - ' '));
+    u8 u8FontIdx = (s8C < ' ' || s8C > 'Z' ? 0 : (s8C - ' '));
 
-    u8 u8StartPage = u8y / 8;
-    u8 u8BitOffeset = u8y % 8;
+    u8 u8StartPage = u8Y / 8;
+    u8 u8BitOffeset = u8Y % 8;
     u8 u8CurrentPage = 0;
     u8 u8CharCol;
     u8 u8ByteToDraw;
@@ -340,14 +341,174 @@ void OLED_vChar(u8 u8x, u8 u8y, char u8c)
                 u8ByteToDraw = u8CharCol >> (8 - u8BitOffeset);
             }
 
-            if (u8ByteToDraw != 0) bHasData = true;
+            if (u8ByteToDraw != 0)
+                bHasData = true;
             buffer[col + 1] = u8ByteToDraw;
         }
 
         if (bHasData || page == 0)
         {
-            OLED_vSetWindow(u8x, u8x + 4, u8CurrentPage, u8CurrentPage);
+            OLED_vSetWindow(u8X, u8X + 4, u8CurrentPage, u8CurrentPage);
             OLED_vStreamData(buffer, 6);
         }
     }
 }
+
+void OLED_vText(u8 u8X, u8 u8Y, const s8 *str)
+{
+    while (*str)
+    {
+        OLED_vChar(u8X, u8Y, *str);
+        u8X += 6;
+        if (u8X > 123)
+            break;
+        str++;
+    }
+}
+
+void OLED_vFontShowcase(void)
+{
+    char character = 32;
+    for (u8 i = 0; i < 64; i += 8)
+    {
+        for (u8 j = 0; j < 123; j += 6)
+        {
+            OLED_vChar(j, i, character);
+            character++;
+            if (character >= 91)
+                break;
+        }
+        if (character >= 91)
+            break;
+    }
+}
+
+void OLED_vCircle(s8 s8X0, s8 s8Y0, u8 u8Radius)
+{
+    s8 s8X = u8Radius;
+    s8 s8Y = 0;
+    s8 s8Error = 0;
+
+    while (s8X >= s8Y)
+    {
+        OLED_vPixel(s8X0 + s8X, s8Y0 + s8Y);
+        OLED_vPixel(s8X0 + s8Y, s8Y0 + s8X);
+        OLED_vPixel(s8X0 - s8Y, s8Y0 + s8X);
+        OLED_vPixel(s8X0 - s8X, s8Y0 + s8Y);
+        OLED_vPixel(s8X0 - s8X, s8Y0 - s8Y);
+        OLED_vPixel(s8X0 - s8Y, s8Y0 - s8X);
+        OLED_vPixel(s8X0 + s8Y, s8Y0 - s8X);
+        OLED_vPixel(s8X0 + s8X, s8Y0 - s8Y);
+
+        s8Y++;
+        if (s8Error <= 0)
+        {
+            s8Error += 2 * s8Y + 1;
+        }
+
+        if (s8Error > 0)
+        {
+            s8X--;
+            s8Error -= 2 * s8X + 1;
+        }
+    }
+}
+
+// void OLED_vFillCircle(s8 s8X0, s8 s8Y0, u8 u8Radius)
+// {
+//     s8 s8X = u8Radius;
+//     s8 s8Y = 0;
+//     s16 s16Radius = u8Radius;
+//     s16 s16Error = 0;
+
+//     while (s8X >= s8Y)
+//     {
+//         s16 s16WidthX = (s16)(2 * s8X) + 1;
+//         s16 s16WidthY = (s16)(2 * s8Y) + 1;
+
+//         s16 s16StartXX = (s16)s8X0 - s8X;
+//         s16 s16StartXY = (s16)s8X0 - s8Y;
+//         s16 s16YPosY = (s16)s8Y0 + s8Y;
+//         s16 s16YNegY = (s16)s8Y0 - s8Y;
+//         s16 s16YPosX = (s16)s8Y0 + s8X;
+//         s16 s16YNegX = (s16)s8Y0 - s8X;
+
+//         if (s16YPosY < 64 && s16YPosY >= 0)
+//         {
+//             s16 s16End = s16StartXX + s16WidthX;
+//             s16 s16DrawStart = s16StartXX;
+//             s16 s16DrawWidth = s16WidthX;
+
+//             if (s16DrawStart < 0)
+//             {
+//                 s16DrawWidth += s16DrawStart;
+//                 s16DrawStart = 0;
+//             }
+//             if (s16End > 128)
+//                 s16DrawWidth = 128 - s16DrawStart;
+//             if (s16DrawWidth > 0)
+//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YPosY, (u8)s16DrawWidth, 1);
+//         }
+
+//         if (s16YNegY < 64 && s16YPosY >= 0)
+//         {
+//             s16 s16End = s16StartXX + s16WidthX;
+//             s16 s16DrawStart = s16StartXX;
+//             s16 s16DrawWidth = s16WidthX;
+
+//             if (s16DrawStart < 0)
+//             {
+//                 s16DrawWidth += s16DrawStart;
+//                 s16DrawStart = 0;
+//             }
+//             if (s16End > 128)
+//                 s16DrawWidth = 128 - s16DrawStart;
+//             if (s16DrawWidth > 0)
+//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YNegY, (u8)s16DrawWidth, 1);
+//         }
+//         if (s16YNegX < 64 && s16YNegX >= 0)
+//         {
+//             s16 s16End = s16StartXY + s16WidthY;
+//             s16 s16DrawStart = s16StartXY;
+//             s16 s16DrawWidth = s16WidthY;
+
+//             if (s16DrawStart < 0)
+//             {
+//                 s16DrawWidth += s16DrawStart;
+//                 s16DrawStart = 0;
+//             }
+//             if (s16End > 128)
+//                 s16DrawWidth = 128 - s16DrawStart;
+
+//             if (s16DrawWidth > 0)
+//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16StartXY, (u8)s16DrawWidth, 1);
+//         }
+
+//         if (s16YNegX < 64 && s16YNegX >= 0)
+//         {
+//             s16 s16End = s16StartXY + s16WidthY;
+//             s16 s16DrawStart = s16StartXY;
+//             s16 s16DrawWidth = s16WidthY;
+
+//             if (s16DrawStart < 0)
+//             {
+//                 s16DrawWidth += s16DrawStart;
+//                 s16DrawStart = 0;
+//             }
+//             if (s16End > 128)
+//                 s16DrawWidth = 128 - s16DrawStart;
+
+//             if (s16DrawWidth > 0)
+//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YNegX, (u8)s16DrawWidth, 1);
+//         }
+
+//         s8Y++;
+//         if (s16Error <= 0)
+//             s16Error += 2 * s8Y + 1;
+//         if (s16Error > 0)
+//         {
+//             s8X--;
+//             s16Error -= 2 * s8X + 1;
+//         }
+//     }
+// }

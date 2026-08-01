@@ -1,7 +1,7 @@
 # ATMega32 OLED Driver
 This is a custom OLED driver written in C for the ATMega32 AVR microcontroller from Atmel/Microchip, designed to be ultra RAM saving, as it doesn't use a frame buffer, stores the font in flash instead of in RAM, and stores temporary buffers in BSS memory during operation only, leaving room for the rest of the code running on the ATMega from the main application. It requires my custom I<sup>2</sup>C driver as a base dependency.
 
-<img src="PrototypePicture.webp" alt="Prototype" width=300 height=400>
+<img src="imgs/image.png" alt="Prototype" width=400 height=500>
 
 I swear to god this image is not AI generated, my phone's camera just does that in low lighting 🥲.
 
@@ -61,5 +61,6 @@ The ATMega32 uses its hardware TWI (Two-Wire Interface) pins for I<sup>2</sup>C 
 | **SDA** | **PC1** (Pin 23) | I<sup>2</sup>C Data |
 
 ## AI Usage Declaration
-Gemini AI was used for debugging purposes, usage can be verified in Lapse (https://lapse.hackclub.com/timelapse/n_QSRWfL-Uo1)
-Github Copilot was used to help write working example code for showcasing
+- Gemini AI was used for debugging purposes, usage can be verified in Lapse (https://lapse.hackclub.com/timelapse/n_QSRWfL-Uo1)
+- Github Copilot was used to help write working example code for showcasing
+- Qwen AI helped with designing the font in hex format
