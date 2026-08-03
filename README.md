@@ -139,8 +139,12 @@ int main(void)
     while (1);             /* The SSD1306 now scrolls with 0% CPU usage */
 }
 ```
+Here's the example working IRL!
 
-![](imgs/quickStart.png)
+<video width="240" height="320" loop autoplay muted>
+  <source src="https://cdn.hackclub.com/019fc7da-a896-7d73-afc7-80061355784b/vid_20260803_135545.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 
 ## API Overview
