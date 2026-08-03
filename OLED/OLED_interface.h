@@ -29,10 +29,20 @@ typedef unsigned long int u32;
 #define OLED_VERTICAL_ADDRESSING 0x01
 #define OLED_PAGE_ADDRESSING 0x02
 
-/* Addressing modes */
-#define OLED_HORIZONTAL_ADDRESSING 0x00
-#define OLED_VERTICAL_ADDRESSING 0x01
-#define OLED_PAGE_ADDRESSING 0x02
+/* Scroll direction */
+#define OLED_SCROLL_RIGHT true
+#define OLED_SCROLL_LEFT  false
+
+/* Scroll speed */
+#define OLED_SCROLL_5FR 0x00
+#define OLED_SCROLL_64FR 0x01
+#define OLED_SCROLL_100FR 0x02
+#define OLED_SCROLL_3FR 0x03
+#define OLED_SCROLL_4FR 0x04
+#define OLED_SCROLL_25FR 0x05
+#define OLED_SCROLL_2FR 0x06
+#define OLED_SCROLL_1FR 0x07
+
 
 /**
  * @brief Initialize I2C communication with the OLED and set up the internal configuration, clears GDDRAM afterwards to start on a fresh slate.
@@ -176,4 +186,18 @@ void OLED_vText(u8 u8X, u8 u8Y, const s8 *str);
  * @note  The first character is blank because it's the space character, it's not broken
  * @note  The characters are ordered in acsending order based on the ASCII table
  */
-void OLED_vFontShowcase();
+void OLED_vFontShowcase(void);
+
+/**
+ * @brief Scrolls/shifts the content of GDDRAM to the left or right
+ * @param bDirection Scroll right or left?
+ * @param u8StartPage First page in scrolling band
+ * @param u8EndPage Last page in scrolling band
+ * @param u8Speed Time interval between every motion
+ */
+void OLED_vScrollH(bool bDirection, u8 u8StartPage, u8 u8EndPage, u8 u8Speed);
+
+/**
+ * @brief Stops active scrolling
+ */
+void OLED_vScrollStop(void);

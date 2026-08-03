@@ -7,6 +7,7 @@
 #include "OLED_interface.h"
 #include "TWI_interface.h"
 #include <avr/pgmspace.h>
+#include <util/delay.h>
 
 /*
    Compact 5x7 Font (ASCII 32 ' ' to 126 '~')
@@ -122,6 +123,7 @@ void OLED_vInit(void)
 
             0xAF // Display ON
         };
+    _delay_ms(10);
     OLED_vStreamCmds(buffer64, 26);
 }
 
@@ -294,7 +296,7 @@ void OLED_vRectangle(u8 u8X, u8 u8Y, u8 u8Width, u8 u8Height, u8 u8OutlineWidth)
 
 void OLED_vPixel(u8 u8X, u8 u8Y)
 {
-    if (u8X >= 0 && u8X < 128 && u8Y >= 0 && u8Y < 64)
+    if (u8X < 128 && u8Y < 64)
     {
         OLED_vFillRectangle(u8X, u8Y, 1, 1);
     }
@@ -414,101 +416,23 @@ void OLED_vCircle(s8 s8X0, s8 s8Y0, u8 u8Radius)
     }
 }
 
-// void OLED_vFillCircle(s8 s8X0, s8 s8Y0, u8 u8Radius)
-// {
-//     s8 s8X = u8Radius;
-//     s8 s8Y = 0;
-//     s16 s16Radius = u8Radius;
-//     s16 s16Error = 0;
+void OLED_vScrollH(bool bDirection, u8 u8StartPage, u8 u8EndPage, u8 u8Speed)
+{
+    u8 cmd[8] =
+    {
+        OLED_CTL_CMD_STREAM,
+        (bDirection == OLED_SCROLL_RIGHT) ? 0x26 : 0x27,
+        0x00, // Dummy byte
+        (u8)(u8StartPage & 0x07),
+        (u8)(u8Speed & 0x07),
+        (u8)(u8EndPage & 0x07),
+        0x00, // Dummy byte
+        0xFF  // Dummy byte
+    };
+    OLED_vStreamCmds(cmd, 8);
+    OLED_vSendCmd(0x2F);
+}
 
-//     while (s8X >= s8Y)
-//     {
-//         s16 s16WidthX = (s16)(2 * s8X) + 1;
-//         s16 s16WidthY = (s16)(2 * s8Y) + 1;
-
-//         s16 s16StartXX = (s16)s8X0 - s8X;
-//         s16 s16StartXY = (s16)s8X0 - s8Y;
-//         s16 s16YPosY = (s16)s8Y0 + s8Y;
-//         s16 s16YNegY = (s16)s8Y0 - s8Y;
-//         s16 s16YPosX = (s16)s8Y0 + s8X;
-//         s16 s16YNegX = (s16)s8Y0 - s8X;
-
-//         if (s16YPosY < 64 && s16YPosY >= 0)
-//         {
-//             s16 s16End = s16StartXX + s16WidthX;
-//             s16 s16DrawStart = s16StartXX;
-//             s16 s16DrawWidth = s16WidthX;
-
-//             if (s16DrawStart < 0)
-//             {
-//                 s16DrawWidth += s16DrawStart;
-//                 s16DrawStart = 0;
-//             }
-//             if (s16End > 128)
-//                 s16DrawWidth = 128 - s16DrawStart;
-//             if (s16DrawWidth > 0)
-//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YPosY, (u8)s16DrawWidth, 1);
-//         }
-
-//         if (s16YNegY < 64 && s16YPosY >= 0)
-//         {
-//             s16 s16End = s16StartXX + s16WidthX;
-//             s16 s16DrawStart = s16StartXX;
-//             s16 s16DrawWidth = s16WidthX;
-
-//             if (s16DrawStart < 0)
-//             {
-//                 s16DrawWidth += s16DrawStart;
-//                 s16DrawStart = 0;
-//             }
-//             if (s16End > 128)
-//                 s16DrawWidth = 128 - s16DrawStart;
-//             if (s16DrawWidth > 0)
-//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YNegY, (u8)s16DrawWidth, 1);
-//         }
-//         if (s16YNegX < 64 && s16YNegX >= 0)
-//         {
-//             s16 s16End = s16StartXY + s16WidthY;
-//             s16 s16DrawStart = s16StartXY;
-//             s16 s16DrawWidth = s16WidthY;
-
-//             if (s16DrawStart < 0)
-//             {
-//                 s16DrawWidth += s16DrawStart;
-//                 s16DrawStart = 0;
-//             }
-//             if (s16End > 128)
-//                 s16DrawWidth = 128 - s16DrawStart;
-
-//             if (s16DrawWidth > 0)
-//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16StartXY, (u8)s16DrawWidth, 1);
-//         }
-
-//         if (s16YNegX < 64 && s16YNegX >= 0)
-//         {
-//             s16 s16End = s16StartXY + s16WidthY;
-//             s16 s16DrawStart = s16StartXY;
-//             s16 s16DrawWidth = s16WidthY;
-
-//             if (s16DrawStart < 0)
-//             {
-//                 s16DrawWidth += s16DrawStart;
-//                 s16DrawStart = 0;
-//             }
-//             if (s16End > 128)
-//                 s16DrawWidth = 128 - s16DrawStart;
-
-//             if (s16DrawWidth > 0)
-//                 OLED_vFillRectangle((u8)s16DrawStart, (u8)s16YNegX, (u8)s16DrawWidth, 1);
-//         }
-
-//         s8Y++;
-//         if (s16Error <= 0)
-//             s16Error += 2 * s8Y + 1;
-//         if (s16Error > 0)
-//         {
-//             s8X--;
-//             s16Error -= 2 * s8X + 1;
-//         }
-//     }
-// }
+void OLED_vScrollStop(void) {
+    OLED_vSendCmd(0x2E);
+}
